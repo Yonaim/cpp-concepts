@@ -2,33 +2,22 @@
 
 /*
     표현식 new/delete와 함수 new/delete를 구분한다!!!
-    - 표현식 new/delete: 메모리 확보 및 해제 + 생성자/소멸자 호출
-    - 함수 new/delete: raw 메모리의 할당/해제 (C++스타일의 malloc, free)
+    - "표현식" new/delete: 메모리 확보 및 해제 + 생성자/소멸자 호출
+    - "함수" new/delete: raw 메모리의 할당/해제 (C++스타일의 malloc, free)
 */
-
-// new/delete = 키워드(표현식 전용)
-// operator new/delete = 함수명(직접 호출 가능)
 
 /*
-    1) new T / delete p (표현식)
+1) operator new (함수) = 할당만
+    - ::operator new(n) : 메모리만 확보 (생성자 호출 X)
+    - ::operator delete(p) : 메모리만 반환 (소멸자 호출 X)
 
-    new T
-    - 메모리 확보 + 생성자 호출을 묶어서 함
-    - 내부적으로 operator new를 찾아서 호출(dynamic dispatch)한 다음 생성자를 호출함
-
-    delete p
-    - 소멸자 호출 + 메모리 해제를 묶어서 함
-
-    2) T::operator new/delete vs ::operator new/delete (함수)
-
-    ::operator new(n)
-    - 전역 할당 함수
-    - 메모리만 확보(생성자 X)
-
-    T::operator new(n)
-    - 클래스 전용 할당 함수
-    - 메모리만 확보(생성자 X)
+2) new (키워드/표현식) = 할당 + 생성(패키지)
+    - new T(...) : 메모리 확보 + 생성자 호출
+    - new (p) T(...) : (할당은 안 하고) p에 생성자 호출 (placement new)
+    (*new 앞에 ::을 붙일시, 메모리 할당 단계에서 전역 ::operator new(n)만을 사용한다)
+    (*전역 placement new는 사실상 주소를 그대로 반환하는 역할만 수행)
 */
+
 
 /*
     operator new/delete 함수 시그니처는 무조건 아래와 동일해야 함
@@ -46,6 +35,7 @@
     - 메모리는 sizeof(myType)만큼 미리 확보가 되어있어야 한다.
     - 메모리 관리와 객체 수명 관리를 분리할 수 있음!!!
     - 큰 raw memory 풀을 쪼개 사용하여 효율 향상 가능
+    - 전역 new라서
 */
 
 using namespace std;
