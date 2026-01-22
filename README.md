@@ -38,18 +38,6 @@ Still updating...
 - `09_concurrency/`  
   atomics basics
 
-
-## How to run
-
-Examples:
-```bash
-# build & run a single file
-g++ -std=c++98 -Wall -Wextra -Werror 01_language_core/implicit_conversion.cpp && ./a.out
-
-# or use your script if you keep one
-./00_setup/run.sh
-```
-
 ## Related Repositories
 - [cpp-containers](https://github.com/Yonaim/cpp-containers)
 - [cpp-custom-allocators](https://github.com/Yonaim/cpp-custom-allocators)
