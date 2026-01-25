@@ -1,41 +1,48 @@
 #include <iostream>
 
 /*
-    표현식 new/delete와 함수 new/delete를 구분한다!!!
-    - "표현식" new/delete: 메모리 확보 및 해제 + 생성자/소멸자 호출
-    - "함수" new/delete: raw 메모리의 할당/해제 (C++스타일의 malloc, free)
+    new/delete 정리
+
+    1) ::operator new / ::operator delete (함수)
+        = (raw 메모리 할당/해제)
+
+        ex) void* ::operator new(size_t n);
+            void  ::operator delete(void* p) noexcept;
+
+    2) new / delete (표현식)
+        = (raw 메모리 할당/해제) + (생성자/소멸자 호출)
+
+        ex)
+            new T(args...)        : (할당) + (T 생성)
+            delete p              : (T 소멸) + (해제)
+
+        사실상 C++스타일의 malloc, free라고 보면 됨
+
+    3) placement new (함수 + 표현식)
+        = 지정한 주소에 생성만 수행
+
+        1) placement operator new 함수 호출 (전역일시, 아무것도 안 함)
+        2) 그 mem 위치에 생성자 호출
+
+        ex) new (p) T(args...)    : (p에 T 생성)
+            p->~T();              : 소멸자 직접 호출
 */
 
 /*
-1) operator new (함수) = 할당만
-    - ::operator new(n) : 메모리만 확보 (생성자 호출 X)
-    - ::operator delete(p) : 메모리만 반환 (소멸자 호출 X)
+    (대표) operator new/delete 함수 시그니처
+    - void* operator new(std::size_t n);
+    - void  operator delete(void* p) noexcept;
 
-2) new (키워드/표현식) = 할당 + 생성(패키지)
-    - new T(...) : 메모리 확보 + 생성자 호출
-    - new (p) T(...) : (할당은 안 하고) p에 생성자 호출 (placement new)
-    (*new 앞에 ::을 붙일시, 메모리 할당 단계에서 전역 ::operator new(n)만을 사용한다)
-    (*전역 placement new는 사실상 주소를 그대로 반환하는 역할만 수행)
-*/
-
-
-/*
-    operator new/delete 함수 시그니처는 무조건 아래와 동일해야 함
-    - void operator delete(void *p)
-    - void *operator new(size_t n)
-    - n은 바이트 수를 의미 (객체 개수가 아님)
+    (대표) placement operator new 함수 시그니처
+    - void* operator new(std::size_t n, void* place) noexcept;
+    // 보통 place를 그대로 반환
 */
 
 /*
-    소멸자는 명시적 호출이 가능하지만, 생성자는 명시적으로 호출할 수 없다.
-    그 대신 사용하는거 -> placement new (위치 지정 new)
-
-    placement new (위치 지정 new): new 키워드를 사용할 때 메모리주소를 같이 명시
-    - ex) new (mem) myType;
+    placement new (위치 지정 new)
     - 메모리는 sizeof(myType)만큼 미리 확보가 되어있어야 한다.
     - 메모리 관리와 객체 수명 관리를 분리할 수 있음!!!
     - 큰 raw memory 풀을 쪼개 사용하여 효율 향상 가능
-    - 전역 new라서
 */
 
 using namespace std;
