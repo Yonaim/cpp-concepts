@@ -5,5 +5,11 @@
 - 그런데 A.cpp의 전역 객체 생성자에서 B.cpp의 전역 객체를 사용하면 B가 아직 초기화되지 않았을 수도 있음
 - 결과: 미초기화 상태 접근, 크래시, 랜덤 동작(플랫폼/옵션/링커에 따라 달라짐)
 
+## 초기화(Initialization)뿐만 아니라 소멸에도 같은 문제가 발생
+
+여러 TU로 쪼개져있는 이상, 소멸 순서도 마찬가지로 보장할 수 없다.
+=> "서로 다른 TU에 있는", "전역/정적 객체"의 초기화/소멸 순서는 보장할 수 없음!!!
+
+## 참고자료
 https://en.cppreference.com/w/cpp/language/siof.html
 https://tithingbygame.tistory.com/253

@@ -34,7 +34,7 @@
 static storage duration 객체는 초기화 방식이 매우 중요함!!!
 
 - static initialization
-    - 0 초기화 + 컴파일타임 상수 초기화
+    - 0 초기화 + 컴파일타임 상수 초기화 (zero-initialization)
     - 대체로 안전/순서 영향 적음
 
 - dynamic initialization
